@@ -42,8 +42,8 @@ function splashify_init() {
   $what_content_value = $config['what_content_value'];
   $how_mode = $config['how_mode'];
   $how_size = $config['how_size'];
-  $how_delay = (int)$config['how_delay'];
-  $how_autoclose = (int)$config['how_autoclose'];
+  $how_delay = (int) $config['how_delay'];
+  $how_autoclose = (int) $config['how_autoclose'];
 
   /*
    * Step #2: Should we display the splash page?
@@ -55,21 +55,21 @@ function splashify_init() {
   if ($when_frequency == 'never') {
     return;
   }
-  
+
   // Set variable whether to show page, default is true
   $is_role = TRUE;
   // Check whether use role setting is checked
-  if($config['when_roles']){
+  if ($config['when_roles']) {
     // If use role setting is checked set variable not to show.
     $is_role = FALSE;
     // Check if any roles match and then sat show to true.
-    foreach($user->roles as $v) {
-      if(in_array($v, $config['when_roles_options'])) {
+    foreach ($user->roles as $v) {
+      if (in_array($v, $config['when_roles_options'])) {
         $is_role = TRUE;
       }
     }
   }
-  
+
   // Check the outcome of above and return if no roles match
   if (!$is_role) {
     return;
@@ -91,7 +91,7 @@ function splashify_init() {
       break;
 
     case 'home':
-      $home_page = variable_get('site_frontpage', 'node');
+      $home_page = config_get('system.performance', 'site_frontpage');
       if ($where_opposite) {
         if ($_GET['q'] != $home_page) {
           // Display on every page except the home page.
@@ -107,11 +107,11 @@ function splashify_init() {
       break;
 
     case 'list':
-      $list_paths = drupal_strtolower($where_listpages);
-      $path = drupal_strtolower(drupal_get_path_alias($_GET['q']));
-      $splash_correct_page = drupal_match_path($path, $list_paths);
-      if ($path != $_GET['q']){
-	      $splash_correct_page = $splash_correct_page || drupal_match_path($_GET['q'], $list_paths);
+      $list_paths = backdrop_strtolower($where_listpages);
+      $path = backdrop_strtolower(backdrop_get_path_alias($_GET['q']));
+      $splash_correct_page = backdrop_match_path($path, $list_paths);
+      if ($path != $_GET['q']) {
+        $splash_correct_page = $splash_correct_page || backdrop_match_path($_GET['q'], $list_paths);
       }
 
       $splash_correct_page = ($splash_correct_page xor $where_opposite);
@@ -275,6 +275,7 @@ function splashify_init() {
    */
 
   // Make our splash settings variables available to our JavaScript.
+  // TODO This variable was probably removed in Backdrop without replacement.
   $js_settings = array(
     'js_splash_always' => $js_splash_always ? '1' : '0',
     'js_expire_after' => $js_expiretime - $js_nowtime,
@@ -283,7 +284,7 @@ function splashify_init() {
     'js_disable_referrer_check' => variable_get('disable_referrer_check', 0),
   );
 
-  drupal_add_js(array('splashify' => $js_settings), array(
+  backdrop_add_js(array('splashify' => $js_settings), array(
     'type' => 'setting',
     'cache' => TRUE,
     'weight' => -100,
@@ -291,8 +292,8 @@ function splashify_init() {
   ));
 
   // Include the main JS file that does the heavy lifting.
-  $js_splashify_int = drupal_get_path('module', 'splashify') . '/js/splashify_init.js';
-  drupal_add_js($js_splashify_int, array(
+  $js_splashify_int = backdrop_get_path('module', 'splashify') . '/js/splashify_init.js';
+  backdrop_add_js($js_splashify_int, array(
     'type' => 'file',
     'scope' => 'header',
     'group' => JS_THEME,
@@ -320,7 +321,7 @@ function splashify_display_splashtext() {
   if ($what_mode == 'template') {
     // Display what they entered in the field in the site template.
     if (!empty($what_content_title)) {
-      drupal_set_title($what_content_title);
+      backdrop_set_title($what_content_title);
     }
 
     return $what_content_value;
@@ -328,7 +329,7 @@ function splashify_display_splashtext() {
   elseif ($what_mode == 'fullscreen') {
     // Display what they entered in the field as a full page.
     echo $what_content_value;
-    drupal_exit();
+    backdrop_exit();
   }
 }
 
@@ -344,29 +345,30 @@ function splashify_display_splashtext() {
  *   what_content_value, how_mode, and how_size.
  */
 function _splashify_get_config() {
+  $config = config('splashify.settings');
   // Control whether user roles are being used or not
-  $when_roles = variable_get('splashify_when_roles', '');
-  
+  $when_roles = $config->get('splashify_when_roles');
+
   // If roles are enabled get the options
-  if($when_roles){
-    $when_roles_options = variable_get('splashify_when_roles_options', '');
-      foreach($when_roles_options as $k => $v) {
-        if ($v === 0) {
-          unset($when_roles_options[$k]);
-        }
+  if ($when_roles) {
+    $when_roles_options = $config->get('splashify_when_roles_options');
+    foreach ($when_roles_options as $k => $v) {
+      if ($v === 0) {
+        unset($when_roles_options[$k]);
       }
     }
-  else{
+  }
+  else {
     $when_roles_options = 0;
   }
-  
+
   // This controls whether mobile is enabled or not.
-  $is_mobile_enabled = variable_get('splashify_when_mobile', 0);
+  $is_mobile_enabled = $config->get('splashify_when_mobile');
 
   if ($is_mobile_enabled) {
     // Verify the Mobile Detect library is installed.
     $mobile_detect = libraries_load('Mobile_Detect');
-    if (!$mobile_detect['installed'] || !file_exists(DRUPAL_ROOT . '/' . $mobile_detect['library path'] . '/Mobile_Detect.php')) {
+    if (!$mobile_detect['installed'] || !file_exists(BACKDROP_ROOT . '/' . $mobile_detect['library path'] . '/Mobile_Detect.php')) {
       $is_mobile_enabled = 0;
     }
   }
@@ -377,7 +379,7 @@ function _splashify_get_config() {
 
   // If this admin setting is true, force the system to use the mobile
   // settings.
-  $force_mobile = variable_get('splashify_when_mobile_test', FALSE);
+  $force_mobile = $config->get('splashify_when_mobile_test');
 
   if (!empty($is_mobile_enabled)) {
 
@@ -388,14 +390,14 @@ function _splashify_get_config() {
       $do_mobile = TRUE;
 
       // Get the mobile admin settings.
-      $when_frequency = variable_get('splashify_when_mobile_frequency', 'never');
-      $where_page = variable_get('splashify_where_mobile_page', 'home');
-      $where_listpages = variable_get('splashify_where_mobile_listpages', '');
-      $where_opposite = variable_get('splashify_where_mobile_opposite', FALSE);
-      $what_mode = variable_get('splashify_what_mobile_mode', 'random');
-      $what_content = variable_get('splashify_what_mobile_content', '');
-      $what_content_title = variable_get('splashify_what_mobile_pagetitle', '');
-      $how_mode = variable_get('splashify_how_mobile_mode', 'redirect');
+      $when_frequency = $config->get('splashify_when_mobile_frequency');
+      $where_page = $config->get('splashify_where_mobile_page');
+      $where_listpages = $config->get('splashify_where_mobile_listpages');
+      $where_opposite = $config->get('splashify_where_mobile_opposite');
+      $what_mode = $config->get('splashify_what_mobile_mode');
+      $what_content = $config->get('splashify_what_mobile_content');
+      $what_content_title = $config->get('splashify_what_mobile_pagetitle');
+      $how_mode = $config->get('splashify_how_mobile_mode');
 
       // This is no longer an option for the mobile settings.
       $how_size = '';
@@ -404,20 +406,20 @@ function _splashify_get_config() {
 
   if (!$do_mobile) {
     // Get the desktop admin settings.
-    $when_frequency = variable_get('splashify_when_desktop_frequency', 'never');
-    $where_page = variable_get('splashify_where_desktop_page', 'home');
-    $where_listpages = variable_get('splashify_where_desktop_listpages', '');
-    $where_opposite = variable_get('splashify_where_desktop_opposite', FALSE);
-    $what_mode = variable_get('splashify_what_desktop_mode', 'random');
-    $what_content = variable_get('splashify_what_desktop_content', '');
-    $what_content_title = variable_get('splashify_what_desktop_pagetitle', '');
-    $how_mode = variable_get('splashify_how_desktop_mode', 'redirect');
-    $how_size = variable_get('splashify_how_desktop_size', '');
-    $how_delay = variable_get('splashify_how_long_delay', '');
-    $how_autoclose = variable_get('splashify_how_long_before_autoclose', '');
+    $when_frequency = $config->get('splashify_when_desktop_frequency');
+    $where_page = $config->get('splashify_where_desktop_page');
+    $where_listpages = $config->get('splashify_where_desktop_listpages');
+    $where_opposite = $config->get('splashify_where_desktop_opposite');
+    $what_mode = $config->get('splashify_what_desktop_mode');
+    $what_content = $config->get('splashify_what_desktop_content');
+    $what_content_title = $config->get('splashify_what_desktop_pagetitle');
+    $how_mode = $config->get('splashify_how_desktop_mode');
+    $how_size = $config->get('splashify_how_desktop_size');
+    $how_delay = $config->get('splashify_how_long_delay');
+    $how_autoclose = $config->get('splashify_how_long_before_autoclose');
   }
 
-  $only_anonymous = variable_get('splashify_when_anonymous', FALSE);
+  $only_anonymous = $config->get('splashify_when_anonymous');
 
   // This is a textarea field, so make sure this value is safe.
   $where_listpages = check_plain($where_listpages);
@@ -461,9 +463,9 @@ function splashify_display_ajax() {
   $nid = arg(1);
   if (!$node = node_load($nid)) {
     echo 'An error occurred loading this node.';
-    drupal_exit();
+    backdrop_exit();
   }
 
-  echo drupal_render(node_view($node, 'full'));
-  drupal_exit();
+  echo backdrop_render(node_view($node, 'full'));
+  backdrop_exit();
 }

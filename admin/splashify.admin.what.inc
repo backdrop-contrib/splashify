@@ -12,7 +12,9 @@
  * "What" settings tab.
  */
 function splashify_admin_what_form($form, &$form_state) {
+  $config = config('splashify.settings');
   $form = array();
+  $form['#config'] = 'splashify.settings';
 
   $form['description'] = array(
     '#markup' => '<p>' . t('What should show up as the splash page?') . '</p>',
@@ -32,7 +34,7 @@ function splashify_admin_what_form($form, &$form_state) {
       'template' => t('Display entered text in the site template'),
       'fullscreen' => t('Display entered text/HTML full screen'),
     ),
-    '#default_value' => variable_get('splashify_what_desktop_mode', 'random'),
+    '#default_value' => $config->get('splashify_what_desktop_mode'),
     '#description' => t('Determines how the content field below will be used with the splash page.'),
     '#ajax' => array(
       'callback' => 'splashify_ajax_what_desktop_mode_callback',
@@ -48,10 +50,10 @@ function splashify_admin_what_form($form, &$form_state) {
     $what_desktop_mode_set = $form_state['values']['splashify_what_desktop_mode'];
   }
   else {
-    $what_desktop_mode_set = variable_get('splashify_what_desktop_mode', '');
+    $what_desktop_mode_set = $config->get('splashify_what_desktop_mode');
   }
 
-  $splashify_what_desktop_content = variable_get('splashify_what_desktop_content', '');
+  $splashify_what_desktop_content = $config->get('splashify_what_desktop_content');
 
   $form['desktop']['mode_value']['begin'] = array('#markup' => '<div id="what-mode-desktop-value">');
 
@@ -72,7 +74,7 @@ function splashify_admin_what_form($form, &$form_state) {
       $form['desktop']['mode_value']['splashify_what_desktop_pagetitle'] = array(
         '#type' => 'textfield',
         '#title' => t('Page Title'),
-        '#default_value' => variable_get('splashify_what_desktop_pagetitle', ''),
+        '#default_value' => $config->get('splashify_what_desktop_pagetitle'),
       );
     }
   }
@@ -88,7 +90,7 @@ function splashify_admin_what_form($form, &$form_state) {
       '#type' => 'textarea',
       '#title' => t('Paths or Url Values'),
       '#default_value' => $splashify_what_desktop_content,
-      '#description' => t('Enter the site paths or URLs (one on each line) to use. You can use either the drupal source path, or the alias. <br />To open a non-Drupal path, use an absolute URL, i.e. http://example.com/splash.html<br />To output the full view mode for a node, use this url: _splashify_ajax/[nid] ....[nid] being the id of the node you want to display.'),
+      '#description' => t('Enter the site paths or URLs (one on each line) to use. You can use either the backdrop source path, or the alias. <br />To open a non-Backdrop path, use an absolute URL, i.e. http://example.com/splash.html<br />To output the full view mode for a node, use this url: _splashify_ajax/[nid] ....[nid] being the id of the node you want to display.'),
     );
   }
 
@@ -105,7 +107,7 @@ function splashify_admin_what_form($form, &$form_state) {
   );
 
   // If the mobile splash is enabled, display the mobile options.
-  if (variable_get('splashify_when_mobile', 0) == 1) {
+  if ($config->get('splashify_when_mobile') == 1) {
     $form['mobile']['splashify_what_mobile_mode'] = array(
       '#type' => 'select',
       '#title' => t('Splash Mode'),
@@ -115,7 +117,7 @@ function splashify_admin_what_form($form, &$form_state) {
         'template' => t('Display entered text in the site template'),
         'fullscreen' => t('Display entered text/HTML full screen'),
       ),
-      '#default_value' => variable_get('splashify_what_mobile_mode', 'random'),
+      '#default_value' => $config->get('splashify_what_mobile_mode'),
       '#description' => t('Determines how the content field below will be used with the splash page.'),
       '#ajax' => array(
         'callback' => 'splashify_ajax_what_mobile_mode_callback',
@@ -131,10 +133,10 @@ function splashify_admin_what_form($form, &$form_state) {
       $what_mobile_mode_set = $form_state['values']['splashify_what_mobile_mode'];
     }
     else {
-      $what_mobile_mode_set = variable_get('splashify_what_mobile_mode', '');
+      $what_mobile_mode_set = $config->get('splashify_what_mobile_mode');
     }
 
-    $splashify_what_mobile_content = variable_get('splashify_what_mobile_content', '');
+    $splashify_what_mobile_content = $config->get('splashify_what_mobile_content');
 
     $form['mobile']['mode_value']['begin'] = array('#markup' => '<div id="what-mode-mobile-value">');
 
@@ -146,7 +148,7 @@ function splashify_admin_what_form($form, &$form_state) {
         '#title' => t('Content'),
         '#default_value' => (is_array($splashify_what_mobile_content)) ? $splashify_what_mobile_content['value'] : '',
         '#format' => (is_array($splashify_what_mobile_content)) ? $splashify_what_mobile_content['format'] : '',
-        '#description' => t('Text to show or paths/URLs (one on each line) to use.  To open a non-Drupal path, use an absolute URL, i.e. http://example.com/splash.html'),
+        '#description' => t('Text to show or paths/URLs (one on each line) to use.  To open a non-Backdrop path, use an absolute URL, i.e. http://example.com/splash.html'),
       );
 
       // If the template mode is selected, allow them to set a page title value.
@@ -154,7 +156,7 @@ function splashify_admin_what_form($form, &$form_state) {
         $form['mobile']['mode_value']['splashify_what_mobile_pagetitle'] = array(
           '#type' => 'textfield',
           '#title' => t('Page Title'),
-          '#default_value' => variable_get('splashify_what_mobile_pagetitle', ''),
+          '#default_value' => $config->get('splashify_what_mobile_pagetitle'),
         );
       }
     }
@@ -170,7 +172,7 @@ function splashify_admin_what_form($form, &$form_state) {
         '#type' => 'textarea',
         '#title' => t('Paths or Url Values'),
         '#default_value' => $splashify_what_mobile_content,
-        '#description' => t('Enter the site paths or URLs (one on each line) to use. You can use either the drupal source path, or the alias. <br />To open a non-Drupal path, use an absolute URL, i.e. http://example.com/splash.html'),
+        '#description' => t('Enter the site paths or URLs (one on each line) to use. You can use either the backdrop source path, or the alias. <br />To open a non-Backdrop path, use an absolute URL, i.e. http://example.com/splash.html'),
       );
     }
 
@@ -212,7 +214,7 @@ function splashify_admin_what_form_validate($form, &$form_state) {
 function splashify_admin_what_form_submit($form, &$form_state) {
   // Clear out the title value if we aren't using the template option.
   if ($form_state['values']['splashify_what_desktop_mode'] != 'template') {
-    variable_set('splashify_what_desktop_pagetitle', '');
+    config_set('splashify.settings', 'splashify_what_desktop_pagetitle', '');
   }
 }
 
@@ -253,18 +255,18 @@ function splashify_what_paths_check($field, $paths) {
   $what_paths = preg_split('/[\n\r]+/', $paths);
   $errors = array();
   foreach ($what_paths as $path) {
-    // If this is a valid Drupal path.
-    if (drupal_valid_path($path)) {
+    // If this is a valid Backdrop path.
+    if (backdrop_valid_path($path)) {
       continue;
     }
 
     // If this path is an alias, we know this is a valid path.
-    if (drupal_lookup_path('source', $path)) {
+    if (backdrop_lookup_path('source', $path)) {
       continue;
     }
 
     // If this path is a source url, we know this is a valid path.
-    if (drupal_lookup_path('alias', $path)) {
+    if (backdrop_lookup_path('alias', $path)) {
       continue;
     }
 
@@ -274,7 +276,7 @@ function splashify_what_paths_check($field, $paths) {
     }
 
     // This path is not an alias or the source url.
-    $errors[] .= t('The path "@path" is not valid.', array('@path' => $path));;
+    $errors[] .= t('The path "@path" is not valid.', array('@path' => $path));
   }
 
   // Since there could be multiple errors for this one field, we want to

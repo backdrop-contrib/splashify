@@ -32,7 +32,7 @@ function splashify_menu() {
 
   // Define the admin area.
   $items['admin/config/system/splashify'] = array(
-    'page callback' => 'drupal_get_form',
+    'page callback' => 'backdrop_get_form',
     'page arguments' => array('splashify_admin_when_form'),
     'title' => 'Splashify',
     'description' => t('Configuration area for the Splashify system.'),
@@ -43,7 +43,7 @@ function splashify_menu() {
   );
 
   $items['admin/config/system/splashify/when'] = array(
-    'page callback' => 'drupal_get_form',
+    'page callback' => 'backdrop_get_form',
     'page arguments' => array('splashify_admin_when_form'),
     'title' => 'When',
     'file' => 'admin/splashify.admin.when.inc',
@@ -53,7 +53,7 @@ function splashify_menu() {
   );
 
   $items['admin/config/system/splashify/where'] = array(
-    'page callback' => 'drupal_get_form',
+    'page callback' => 'backdrop_get_form',
     'page arguments' => array('splashify_admin_where_form'),
     'title' => 'Where',
     'file' => 'admin/splashify.admin.where.inc',
@@ -63,7 +63,7 @@ function splashify_menu() {
   );
 
   $items['admin/config/system/splashify/what'] = array(
-    'page callback' => 'drupal_get_form',
+    'page callback' => 'backdrop_get_form',
     'page arguments' => array('splashify_admin_what_form'),
     'title' => 'What',
     'file' => 'admin/splashify.admin.what.inc',
@@ -73,7 +73,7 @@ function splashify_menu() {
   );
 
   $items['admin/config/system/splashify/how'] = array(
-    'page callback' => 'drupal_get_form',
+    'page callback' => 'backdrop_get_form',
     'page arguments' => array('splashify_admin_how_form'),
     'title' => 'How',
     'file' => 'admin/splashify.admin.how.inc',
@@ -109,7 +109,7 @@ function splashify_libraries_info() {
     'vendor url' => 'http://www.jstorage.info/',
     'download url' => 'https://github.com/andris9/jStorage/zipball/master',
     'version callback' => '_splashify_jstorage_version',
-    'version arguments' => array('1','2'),
+    'version arguments' => array('1', '2'),
     'versions' => array(
       '1' => array(),
       '2' => array(),
@@ -139,11 +139,11 @@ function splashify_libraries_info() {
     'download url' => 'https://raw.github.com/serbanghita/Mobile-Detect/master/Mobile_Detect.php',
     'version callback' => '_splashify_mobiledetect_version',
     'files' => array(
-      'php' => array('Mobile_Detect.php')
+      'php' => array('Mobile_Detect.php'),
     ),
     'versions' => array(
       '2' => array(),
-    )
+    ),
   );
 
   return $libraries;
@@ -170,7 +170,7 @@ function _splashify_mobiledetect_version($library, $version) {
  */
 function _splashify_test_installed($library, $name, $args) {
   // Make sure the file exists.
-  $path = DRUPAL_ROOT . '/' . $library['library path'] . '/';
+  $path = BACKDROP_ROOT . '/' . $library['library path'] . '/';
   $file = file_exists($path . 'jstorage.min.js');
   if (!$file) {
     return FALSE;

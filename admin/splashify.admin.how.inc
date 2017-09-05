@@ -12,7 +12,9 @@
  * "How" settings tab.
  */
 function splashify_admin_how_form($form, &$form_state) {
+  $config = config('splashify.settings');
   $form = array();
+  $form['#config'] = 'splashify.settings';
 
   $form['description'] = array(
     '#markup' => '<p>' . t('How should the splash page come up?') . '</p>',
@@ -32,7 +34,7 @@ function splashify_admin_how_form($form, &$form_state) {
       '@colorbox' => 'http://drupal.org/project/colorbox',
     ));
 
-    drupal_set_message($colorbox_warning, 'warning');
+    backdrop_set_message($colorbox_warning, 'warning');
   }
 
   $form['desktop'] = array(
@@ -45,7 +47,7 @@ function splashify_admin_how_form($form, &$form_state) {
     '#type' => 'select',
     '#title' => t('Splash Display Mode'),
     '#options' => $splashify_how_mode_options,
-    '#default_value' => variable_get('splashify_how_desktop_mode', 'redirect'),
+    '#default_value' => $config->get('splashify_how_desktop_mode'),
     '#description' => t('Determines how the splash page should show up. If you want to use the lightbox option, you need to have the Colorbox module installed.'),
     '#ajax' => array(
       'callback' => 'splashify_ajax_how_desktop_mode_callback',
@@ -61,7 +63,7 @@ function splashify_admin_how_form($form, &$form_state) {
     $how_desktop_mode_set = $form_state['values']['splashify_how_desktop_mode'];
   }
   else {
-    $how_desktop_mode_set = variable_get('splashify_how_desktop_mode', '');
+    $how_desktop_mode_set = $config->get('splashify_how_desktop_mode');
   }
 
   $form['desktop']['mode_value']['begin'] = array('#markup' => '<div id="how-mode-desktop-size">');
@@ -72,7 +74,7 @@ function splashify_admin_how_form($form, &$form_state) {
     $form['desktop']['mode_value']['splashify_how_desktop_size'] = array(
       '#type' => 'textfield',
       '#title' => t('Window/Box size'),
-      '#default_value' => variable_get('splashify_how_desktop_size', ''),
+      '#default_value' => $config->get('splashify_how_desktop_size'),
       '#description' => t('Size (<code>WIDTHxHEIGHT</code>, e.g. 400x300) of the Window or Lightbox.'),
     );
   }
@@ -85,15 +87,14 @@ function splashify_admin_how_form($form, &$form_state) {
   );
 
   // If the mobile splash is enabled, display the mobile options.
-  if (variable_get('splashify_when_mobile', 0) == 1) {
+  if ($config->get('splashify_when_mobile') == 1) {
     // Determines how the splash page shows up.
     $form['mobile']['splashify_how_mobile_mode'] = array(
       '#type' => 'select',
       '#title' => t('Splash Display Mode'),
       '#options' => $splashify_how_mode_options,
-      '#default_value' => variable_get('splashify_how_mobile_mode', 'redirect'),
+      '#default_value' => $config->get('splashify_how_mobile_mode'),
       '#description' => t('How should we load the splash page? Note: Redirect is currently the only option.'),
-
       // For the time being, the only option we are allowing for mobile
       // devices is "redirect". We display this so that it is obvious the
       // method that is used.
@@ -116,7 +117,7 @@ function splashify_admin_how_form($form, &$form_state) {
   $form['delay']['mode_value']['splashify_how_long_delay'] = array(
     '#type' => 'textfield',
     '#title' => t('Splashify Delay'),
-    '#default_value' => variable_get('splashify_how_long_delay', ''),
+    '#default_value' => $config->get('splashify_how_long_delay'),
     '#description' => t('Enter how long in milliseconds to wait before Splashify does it\'s thing. Leave blank to use the default.'),
   );
 
@@ -132,7 +133,7 @@ function splashify_admin_how_form($form, &$form_state) {
   $form['autoclose']['mode_value']['splashify_how_long_before_autoclose'] = array(
     '#type' => 'textfield',
     '#title' => t('Splashify Autoclose'),
-    '#default_value' => variable_get('splashify_how_long_before_autoclose', ''),
+    '#default_value' => $config->get('splashify_how_long_before_autoclose'),
     '#description' => t('Enter how long in milliseconds to wait before Splashify autocloses.  Leave blank to disable.'),
   );
 

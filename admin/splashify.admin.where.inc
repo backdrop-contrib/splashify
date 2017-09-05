@@ -12,7 +12,9 @@
  * "Where" settings tab.
  */
 function splashify_admin_where_form($form, &$form_state) {
+  $config = config('splashify.settings');
   $form = array();
+  $form['#config'] = 'splashify.settings';
 
   $form['description'] = array(
     '#markup' => '<p>' . t('Where should the splash page come up?') . '</p>',
@@ -32,7 +34,7 @@ function splashify_admin_where_form($form, &$form_state) {
   $form['desktop']['splashify_where_desktop_page'] = array(
     '#type' => 'select',
     '#title' => t('Specify where the splash page should show up:'),
-    '#default_value' => variable_get('splashify_where_desktop_page', 'home'),
+    '#default_value' => $config->get('splashify_where_desktop_page'),
     '#options' => $page_options,
     '#description' => t('Define where the splash page should show up.'),
     '#ajax' => array(
@@ -49,7 +51,7 @@ function splashify_admin_where_form($form, &$form_state) {
     $where_desktop_list_set = $form_state['values']['splashify_where_desktop_page'];
   }
   else {
-    $where_desktop_list_set = variable_get('splashify_where_desktop_page', '');
+    $where_desktop_list_set = $config->get('splashify_where_desktop_page');
   }
 
   $form['desktop']['options']['begin'] = array('#markup' => '<div id="where-desktop-page-value">');
@@ -60,7 +62,7 @@ function splashify_admin_where_form($form, &$form_state) {
     $form['desktop']['options']['splashify_where_desktop_listpages'] = array(
       '#type' => 'textarea',
       '#title' => t('List Pages'),
-      '#default_value' => variable_get('splashify_where_desktop_listpages', ''),
+      '#default_value' => $config->get('splashify_where_desktop_listpages'),
       '#description' => t("Enter the paths of the pages where you want the splash page to appear. Enter one path per line. The '*' character is a wildcard. Example paths are %blog for the blog page and %blog-wildcard for every personal blog. %front is the front page.", array('%blog' => 'blog', '%blog-wildcard' => 'blog/*', '%front' => '<front>')),
     );
   }
@@ -70,7 +72,7 @@ function splashify_admin_where_form($form, &$form_state) {
   $form['desktop']['splashify_where_desktop_opposite'] = array(
     '#type' => 'checkbox',
     '#title' => t('Show the splash page on every page except for the option selected above.'),
-    '#default_value' => variable_get('splashify_where_desktop_opposite', FALSE),
+    '#default_value' => $config->get('splashify_where_desktop_opposite'),
   );
 
   $form['mobile'] = array(
@@ -79,11 +81,11 @@ function splashify_admin_where_form($form, &$form_state) {
   );
 
   // If the mobile splash is enabled, display the mobile options.
-  if (variable_get('splashify_when_mobile', 0) == 1) {
+  if ($config->get('splashify_when_mobile') == 1) {
     $form['mobile']['splashify_where_mobile_page'] = array(
       '#type' => 'select',
       '#title' => t('Specify where the splash page should show up:'),
-      '#default_value' => variable_get('splashify_where_mobile_page', 'home'),
+      '#default_value' => $config->get('splashify_where_mobile_page'),
       '#options' => $page_options,
       '#ajax' => array(
         'callback' => 'splashify_ajax_where_mobile_page_callback',
@@ -99,7 +101,7 @@ function splashify_admin_where_form($form, &$form_state) {
       $where_mobile_list_set = $form_state['values']['splashify_where_mobile_page'];
     }
     else {
-      $where_mobile_list_set = variable_get('splashify_where_mobile_page', '');
+      $where_mobile_list_set = $config->get('splashify_where_mobile_page');
     }
 
     $form['mobile']['options']['begin'] = array('#markup' => '<div id="where-mobile-page-value">');
@@ -108,7 +110,7 @@ function splashify_admin_where_form($form, &$form_state) {
       $form['mobile']['options']['splashify_where_mobile_listpages'] = array(
         '#type' => 'textarea',
         '#title' => t('List Pages'),
-        '#default_value' => variable_get('splashify_where_mobile_listpages', ''),
+        '#default_value' => $config->get('splashify_where_mobile_listpages'),
         '#description' => t("Enter the paths of the pages where you want the splash page to appear. Enter one path per line. The '*' character is a wildcard. Example paths are %blog for the blog page and %blog-wildcard for every personal blog. %front is the front page.", array('%blog' => 'blog', '%blog-wildcard' => 'blog/*', '%front' => '<front>')),
       );
     }
@@ -118,7 +120,7 @@ function splashify_admin_where_form($form, &$form_state) {
     $form['mobile']['splashify_where_mobile_opposite'] = array(
       '#type' => 'checkbox',
       '#title' => t('Show the splash page on every page except for the option selected above.'),
-      '#default_value' => variable_get('splashify_where_mobile_opposite', FALSE),
+      '#default_value' => $config->get('splashify_where_mobile_opposite'),
     );
 
   }
@@ -160,14 +162,14 @@ function splashify_admin_where_form_submit($form, &$form_state) {
   if ($form_state['values']['splashify_where_desktop_page'] != 'list') {
     // Unset the listpages variable (desktop), if the list pages option is not
     // set.
-    variable_set('splashify_where_desktop_listpages', '');
+    config_set('splashify.settings', 'splashify_where_desktop_listpages', '');
   }
 
   if (isset($form_state['values']['splashify_where_mobile_page'])) {
     if ($form_state['values']['splashify_where_mobile_page'] != 'list') {
       // Unset the listpages variable (mobile), if the list pages option is not
       // set.
-      variable_set('splashify_where_mobile_listpages', '');
+      config_set('splashify.settings', 'splashify_where_mobile_listpages', '');
     }
   }
 }
@@ -200,7 +202,7 @@ function splashify_where_paths_check($field, $paths) {
   $errors = array();
   foreach ($what_paths as $path) {
     // If this path is a source url, we know this is a valid path.
-    if (drupal_valid_path($path)) {
+    if (backdrop_valid_path($path)) {
       continue;
     }
 

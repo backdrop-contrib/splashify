@@ -12,14 +12,16 @@
  * "When" settings tab.
  */
 function splashify_admin_when_form($form, &$form_state) {
+  $config = config('splashify.settings');
   $roles = user_roles(TRUE);
   $form_roles = array();
-  
-  foreach($roles as $v){
+
+  foreach ($roles as $v) {
     $form_roles[$v] = $v;
   }
-  
+
   $form = array();
+  $form['#config'] = 'splashify.settings';
 
   $form['description'] = array(
     '#markup' => '<p>' . t('When should the splash page show up? This is also where the main mobile option is defined.') . '</p>',
@@ -28,11 +30,12 @@ function splashify_admin_when_form($form, &$form_state) {
   $form['splashify_when_anonymous'] = array(
     '#type' => 'checkbox',
     '#title' => t('Only show to Anonymous users'),
-    '#default_value' => variable_get('splashify_when_anonymous', FALSE),
+    '#default_value' => $config->get('splashify_when_anonymous'),
   );
 
   // Add control to disable referrer check
   // @see splashify_init.js
+  // TODO This variable was probably removed in Backdrop without replacement.
   $form['disable_referrer_check'] = array(
     '#type' => 'checkbox',
     '#title' => t('Disable referrer check'),
@@ -48,7 +51,7 @@ function splashify_admin_when_form($form, &$form_state) {
   $form['desktop']['splashify_when_desktop_frequency'] = array(
     '#type' => 'select',
     '#title' => t('How often should visitors see the splash page?'),
-    '#default_value' => variable_get('splashify_when_desktop_frequency', 'never'),
+    '#default_value' => $config->get('splashify_when_desktop_frequency'),
     '#options' => array(
       'never' => t('Never (off)'),
       'always' => t('Always'),
@@ -57,27 +60,27 @@ function splashify_admin_when_form($form, &$form_state) {
       'weekly' => t('Weekly'),
     ),
   );
-  
+
   $form['roles'] = array(
     '#type' => 'fieldset',
     '#title' => t('Display for roles'),
     '#states' => array(
       'visible' => array(
         ':input[name="splashify_when_anonymous"]' => array('checked' => FALSE),
-      )      
+      ),
     ),
   );
 
-  $form['roles']['splashify_when_roles'] = array (
+  $form['roles']['splashify_when_roles'] = array(
     '#type' => 'checkbox',
     '#title' => 'Restrict to selected roles',
-    '#default_value' => variable_get('splashify_when_roles', FALSE),
+    '#default_value' => $config->get('splashify_when_roles'),
   );
-  
+
   $form['roles']['splashify_when_roles_options'] = array(
     '#type' => 'checkboxes',
-    '#title' => t('Which roles should this apply to'),    
-    '#default_value' => variable_get('splashify_when_roles_options', array('authenticated user')),
+    '#title' => t('Which roles should this apply to'),
+    '#default_value' => $config->get('splashify_when_roles_options'),
     '#options' => $form_roles,
     '#description' => t('Select the roles for which it will apply'),
   );
@@ -92,7 +95,7 @@ function splashify_admin_when_form($form, &$form_state) {
     $form['mobile']['splashify_when_mobile'] = array(
       '#type' => 'checkbox',
       '#title' => t('Enable Unique Mobile Splash'),
-      '#default_value' => variable_get('splashify_when_mobile', 0),
+      '#default_value' => $config->get('splashify_when_mobile'),
       '#disabled' => FALSE,
       '#ajax' => array(
         'callback' => 'splashify_ajax_when_mobile_callback',
@@ -108,7 +111,7 @@ function splashify_admin_when_form($form, &$form_state) {
       $when_mobile_set = $form_state['values']['splashify_when_mobile'];
     }
     else {
-      $when_mobile_set = variable_get('splashify_when_mobile', 0);
+      $when_mobile_set = $config->get('splashify_when_mobile');
     }
 
     $form['mobile']['options']['begin'] = array('#markup' => '<div id="when-mobile-settings">');
@@ -118,7 +121,7 @@ function splashify_admin_when_form($form, &$form_state) {
       $form['mobile']['options']['splashify_when_mobile_frequency'] = array(
         '#type' => 'select',
         '#title' => t('How often should mobile visitors see the mobile splash page?'),
-        '#default_value' => variable_get('splashify_when_mobile_frequency', 'never'),
+        '#default_value' => $config->get('splashify_when_mobile_frequency'),
         '#options' => array(
           'never' => t('Never (off)'),
           'always' => t('Always'),
@@ -131,7 +134,7 @@ function splashify_admin_when_form($form, &$form_state) {
       $form['mobile']['options']['splashify_when_mobile_test'] = array(
         '#type' => 'checkbox',
         '#title' => t('Test Mobile'),
-        '#default_value' => variable_get('splashify_when_mobile_test', 0),
+        '#default_value' => $config->get('splashify_when_mobile_test'),
         '#description' => t('Turn this option on to force the mobile settings to take affect so you can test from your desktop browser.'),
       );
     }
@@ -153,8 +156,8 @@ function splashify_admin_when_form_submit($form, &$form_state) {
   if (isset($form_state['values']['splashify_when_mobile'])) {
     if ($form_state['values']['splashify_when_mobile'] != 1) {
       // Unset these values, if the mobile option is disabled.
-      variable_set('splashify_when_mobile_frequency', 'never');
-      variable_set('splashify_when_mobile_test', 0);
+      config_set('splashify.settings', 'splashify_when_mobile_frequency', 'never');
+      config_set('splashify.settings', 'splashify_when_mobile_test', 0);
     }
   }
 
@@ -165,7 +168,7 @@ function splashify_admin_when_form_submit($form, &$form_state) {
   }
 
   if ($form_state['values']['splashify_when_roles'] !== 1) {
-    variable_set('splashify_when_roles_options', 0);
+    config_set('splashify.settings', 'splashify_when_roles_options', 0);
   }
 }
 

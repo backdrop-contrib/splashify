@@ -22,7 +22,7 @@ function splashify_requirements($phase) {
 
     if ($installed) {
       // Check PHPMailer file integrity.
-      $path = DRUPAL_ROOT . '/' . $jstorage['library path'] . '/';
+      $path = BACKDROP_ROOT . '/' . $jstorage['library path'] . '/';
 
       $file_integrity = file_exists($path . 'jstorage.min.js');
 
@@ -45,7 +45,7 @@ function splashify_requirements($phase) {
     }
 
     // Mobile Detect
-    $is_mobile_enabled = variable_get('splashify_when_mobile', 0);
+    $is_mobile_enabled = config_get('splashify.settings', 'splashify_when_mobile');
 
     if ($is_mobile_enabled) {
       // Verify the Mobile Detect library is installed.
@@ -70,31 +70,101 @@ function splashify_requirements($phase) {
  * Deletes all of the variables this module creates via variable_set().
  */
 function splashify_uninstall() {
-  variable_del('splashify_when_anonymous');
+  config_clear('splashify.settings', 'splashify_when_anonymous');
+  // TODO This variable was probably removed in Backdrop without replacement.
   variable_del('disable_referrer_check');
 
   // Desktop variables.
-  variable_del('splashify_when_desktop_frequency');
-  variable_del('splashify_where_desktop_page');
-  variable_del('splashify_where_desktop_listpages');
-  variable_del('splashify_where_desktop_opposite');
-  variable_del('splashify_what_desktop_mode');
-  variable_del('splashify_what_desktop_content');
-  variable_del('splashify_what_desktop_pagetitle');
-  variable_del('splashify_how_desktop_mode');
-  variable_del('splashify_how_desktop_size');
-  variable_del('splashify_when_roles');
-  variable_del('splashify_when_roles_options');
+  config_clear('splashify.settings', 'splashify_when_desktop_frequency');
+  config_clear('splashify.settings', 'splashify_where_desktop_page');
+  config_clear('splashify.settings', 'splashify_where_desktop_listpages');
+  config_clear('splashify.settings', 'splashify_where_desktop_opposite');
+  config_clear('splashify.settings', 'splashify_what_desktop_mode');
+  config_clear('splashify.settings', 'splashify_what_desktop_content');
+  config_clear('splashify.settings', 'splashify_what_desktop_pagetitle');
+  config_clear('splashify.settings', 'splashify_how_desktop_mode');
+  config_clear('splashify.settings', 'splashify_how_desktop_size');
+  config_clear('splashify.settings', 'splashify_when_roles');
+  config_clear('splashify.settings', 'splashify_when_roles_options');
 
   // Mobile variables.
-  variable_del('splashify_when_mobile');;
-  variable_del('splashify_when_mobile_test');
-  variable_del('splashify_when_mobile_frequency');
-  variable_del('splashify_where_mobile_page');
-  variable_del('splashify_where_mobile_listpages');
-  variable_del('splashify_where_mobile_opposite');
-  variable_del('splashify_what_mobile_mode');
-  variable_del('splashify_what_mobile_content');
-  variable_del('splashify_what_mobile_pagetitle');
-  variable_del('splashify_how_mobile_mode');
+  config_clear('splashify.settings', 'splashify_when_mobile');
+  config_clear('splashify.settings', 'splashify_when_mobile_test');
+  config_clear('splashify.settings', 'splashify_when_mobile_frequency');
+  config_clear('splashify.settings', 'splashify_where_mobile_page');
+  config_clear('splashify.settings', 'splashify_where_mobile_listpages');
+  config_clear('splashify.settings', 'splashify_where_mobile_opposite');
+  config_clear('splashify.settings', 'splashify_what_mobile_mode');
+  config_clear('splashify.settings', 'splashify_what_mobile_content');
+  config_clear('splashify.settings', 'splashify_what_mobile_pagetitle');
+  config_clear('splashify.settings', 'splashify_how_mobile_mode');
+}
+
+/**
+ * Implements hook_update_last_removed().
+ */
+function splashify_update_last_removed() {
+  return;
+}
+
+/**
+ * Implements hook_update_N().
+ */
+function splashify_update_1000() {
+  $config = config('splashify.settings');
+  $config->set('splashify_how_desktop_mode', update_variable_get('splashify_how_desktop_mode', 'redirect'));
+  $config->set('splashify_how_desktop_size', update_variable_get('splashify_how_desktop_size', ''));
+  $config->set('splashify_when_mobile', update_variable_get('splashify_when_mobile', 'novalue'));
+  $config->set('splashify_how_mobile_mode', update_variable_get('splashify_how_mobile_mode', 'redirect'));
+  $config->set('splashify_how_long_delay', update_variable_get('splashify_how_long_delay', ''));
+  $config->set('splashify_how_long_before_autoclose', update_variable_get('splashify_how_long_before_autoclose', ''));
+  $config->set('splashify_what_desktop_mode', update_variable_get('splashify_what_desktop_mode', 'random'));
+  $config->set('splashify_what_desktop_content', update_variable_get('splashify_what_desktop_content', ''));
+  $config->set('splashify_what_desktop_pagetitle', update_variable_get('splashify_what_desktop_pagetitle', ''));
+  $config->set('splashify_what_mobile_mode', update_variable_get('splashify_what_mobile_mode', 'random'));
+  $config->set('splashify_what_mobile_content', update_variable_get('splashify_what_mobile_content', ''));
+  $config->set('splashify_what_mobile_pagetitle', update_variable_get('splashify_what_mobile_pagetitle', ''));
+  $config->set('splashify_when_anonymous', update_variable_get('splashify_when_anonymous', 'FALSE'));
+  $config->set('splashify_when_desktop_frequency', update_variable_get('splashify_when_desktop_frequency', 'never'));
+  $config->set('splashify_when_roles', update_variable_get('splashify_when_roles', ''));
+  $config->set('splashify_when_roles_options', update_variable_get('splashify_when_roles_options', ''));
+  $config->set('splashify_when_mobile_frequency', update_variable_get('splashify_when_mobile_frequency', 'never'));
+  $config->set('splashify_when_mobile_test', update_variable_get('splashify_when_mobile_test', 'FALSE'));
+  $config->set('splashify_where_desktop_page', update_variable_get('splashify_where_desktop_page', 'home'));
+  $config->set('splashify_where_desktop_listpages', update_variable_get('splashify_where_desktop_listpages', ''));
+  $config->set('splashify_where_desktop_opposite', update_variable_get('splashify_where_desktop_opposite', 'FALSE'));
+  $config->set('splashify_where_mobile_page', update_variable_get('splashify_where_mobile_page', 'home'));
+  $config->set('splashify_where_mobile_listpages', update_variable_get('splashify_where_mobile_listpages', ''));
+  $config->set('splashify_where_mobile_opposite', update_variable_get('splashify_where_mobile_opposite', 'FALSE'));
+  update_variable_del('splashify_how_desktop_mode');
+  update_variable_del('splashify_how_desktop_size');
+  update_variable_del('splashify_when_mobile');
+  update_variable_del('splashify_how_mobile_mode');
+  update_variable_del('splashify_how_long_delay');
+  update_variable_del('splashify_how_long_before_autoclose');
+  update_variable_del('splashify_what_desktop_mode');
+  update_variable_del('splashify_what_desktop_content');
+  update_variable_del('splashify_what_desktop_pagetitle');
+  update_variable_del('splashify_what_mobile_mode');
+  update_variable_del('splashify_what_mobile_content');
+  update_variable_del('splashify_what_mobile_pagetitle');
+  update_variable_del('splashify_when_anonymous');
+  update_variable_del('splashify_when_desktop_frequency');
+  update_variable_del('splashify_when_roles');
+  update_variable_del('splashify_when_roles_options');
+  update_variable_del('splashify_when_mobile_frequency');
+  update_variable_del('splashify_when_mobile_test');
+  update_variable_del('splashify_where_desktop_page');
+  update_variable_del('splashify_where_desktop_listpages');
+  update_variable_del('splashify_where_desktop_opposite');
+  update_variable_del('splashify_where_mobile_page');
+  update_variable_del('splashify_where_mobile_listpages');
+  update_variable_del('splashify_where_mobile_opposite');
+}
+
+/**
+ * Implements hook_install().
+ */
+function splashify_install() {
+  // Dynamically generated variable data was detected.
 }
