@@ -17,12 +17,9 @@ function splashify_requirements($phase) {
   // Make sure we we can access the necessary libraries.
   if ($phase == 'runtime') {
     // jStorage
-    $jstorage = libraries_detect('jstorage');
-    $installed = ($jstorage && !empty($jstorage['installed']));
-
-    if ($installed) {
-      // Check PHPMailer file integrity.
-      $path = BACKDROP_ROOT . '/' . $jstorage['library path'] . '/';
+    if (module_exists('jstorage')) {
+      // Check jStorage file integrity.
+      $path = backdrop_get_path('module', 'jstorage') . '/library/';
 
       $file_integrity = file_exists($path . 'jstorage.min.js');
 
@@ -38,7 +35,7 @@ function splashify_requirements($phase) {
     else {
       $requirements['splashify_jstorage'] = array(
         'title' => $t('Splashify'),
-        'description' => $t('The jStorage library could not be found. See the README.txt file for more information.'),
+        'description' => $t('The jStorage module is required but is not enabled.'),
         'value' => '',
         'severity' => REQUIREMENT_ERROR,
       );
@@ -48,12 +45,11 @@ function splashify_requirements($phase) {
     $is_mobile_enabled = config_get('splashify.settings', 'splashify_when_mobile');
 
     if ($is_mobile_enabled) {
-      // Verify the Mobile Detect library is installed.
-      $mobile_detect = libraries_load('Mobile_Detect');
-      if (!$mobile_detect['installed']) {
+      // Verify the Mobile Detect library is available.
+      if (!module_exists('mobile_detect')) {
         $requirements['splashify_Mobile_Detect'] = array(
           'title' => $t('Splashify'),
-          'description' => $t('Mobile splash is enabled, but could not find the Mobile Detect library. See the readme.'),
+          'description' => $t('The Mobile splash feature is enabled, but not the Mobile Detect module. '),
           'value' => '',
           'severity' => REQUIREMENT_ERROR,
         );

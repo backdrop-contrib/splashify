@@ -39,7 +39,7 @@ function splashify_admin_when_form($form, &$form_state) {
   $form['disable_referrer_check'] = array(
     '#type' => 'checkbox',
     '#title' => t('Disable referrer check'),
-    '#default_value' => variable_get('disable_referrer_check', 0),
+    '#default_value' => $config->get('disable_referrer_check'),
     '#description' => t('Show splash page even when page was loaded from an internal page.<br /><strong>WARNING:</strong> Be very careful with this setting when you use the Always option and have the splash page displayed on every page! This would prevent you from accessing the admin.'),
   );
 
@@ -90,8 +90,8 @@ function splashify_admin_when_form($form, &$form_state) {
     '#title' => t('Mobile Settings'),
   );
 
-  $mobile_detect = libraries_load('Mobile_Detect');
-  if ($mobile_detect['installed']) {
+  if (module_exists('mobile_detect')) {
+    include_once (backdrop_get_path('module', 'mobile_detect') . '/library/Mobile_Detect.php');
     $form['mobile']['splashify_when_mobile'] = array(
       '#type' => 'checkbox',
       '#title' => t('Enable Unique Mobile Splash'),
@@ -142,7 +142,7 @@ function splashify_admin_when_form($form, &$form_state) {
     $form['mobile']['options']['end'] = array('#markup' => '</div>');
   }
   else {
-    $form['mobile']['description'] = array('#markup' => t('In order to enable the mobile splash, you need to have the Mobile Detect library installed. <a href="@download" target="_blank">Download the library</a> and put the files into /sites/all/libraries/Mobile_Detect/ .', array('@download' => 'http://mobiledetect.net/')));
+    $form['mobile']['description'] = array('#markup' => t('In order to enable the mobile splash, you need to have the Mobile Detect module installed and enabled.'));
   }
 
   $form['#submit'][] = 'splashify_admin_when_form_submit';

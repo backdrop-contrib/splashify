@@ -18,7 +18,7 @@ function splashify_init() {
   global $base_url;
 
   // Load the jStorage library.
-  $library = libraries_load('jstorage', 'minified');
+  backdrop_add_js(  backdrop_get_path('module', 'jstorage') . '/library/jstorage.min.js', 'file' );
 
   // If this is the cron script or drush, do not run the splashify code.
   $drush_check = (function_exists('drush_verify_cli') && call_user_func('drush_verify_cli')) ? TRUE : FALSE;
@@ -220,7 +220,7 @@ function splashify_init() {
   $js_mode_settings['how_delay_enable'] = ($how_delay > 0) ? 1 : 0;
   $js_mode_settings['how_autoclose'] = $how_autoclose + $how_delay;
   $js_mode_settings['how_autoclose_enable'] = ($how_autoclose > 0) ? 1 : 0;
-
+debug($js_mode_settings);
   $js_mode = '';
   switch ($how_mode) {
     case 'redirect':
@@ -275,24 +275,23 @@ function splashify_init() {
    */
 
   // Make our splash settings variables available to our JavaScript.
-  // TODO This variable was probably removed in Backdrop without replacement.
   $js_settings = array(
     'js_splash_always' => $js_splash_always ? '1' : '0',
     'js_expire_after' => $js_expiretime - $js_nowtime,
     'js_mode' => $js_mode,
     'js_mode_settings' => $js_mode_settings,
-    'js_disable_referrer_check' => variable_get('disable_referrer_check', 0),
+    'js_disable_referrer_check' => config_get('splashify.settings', 'disable_referrer_check'),
   );
-
+debug($js_settings);
   backdrop_add_js(array('splashify' => $js_settings), array(
     'type' => 'setting',
     'cache' => TRUE,
     'weight' => -100,
     'every_page' => TRUE,
   ));
-
   // Include the main JS file that does the heavy lifting.
   $js_splashify_int = backdrop_get_path('module', 'splashify') . '/js/splashify_init.js';
+debug($js_splashify_int);
   backdrop_add_js($js_splashify_int, array(
     'type' => 'file',
     'scope' => 'header',
@@ -367,8 +366,7 @@ function _splashify_get_config() {
 
   if ($is_mobile_enabled) {
     // Verify the Mobile Detect library is installed.
-    $mobile_detect = libraries_load('Mobile_Detect');
-    if (!$mobile_detect['installed'] || !file_exists(BACKDROP_ROOT . '/' . $mobile_detect['library path'] . '/Mobile_Detect.php')) {
+    if (!module_exists('mobile_detect')) {
       $is_mobile_enabled = 0;
     }
   }
@@ -381,7 +379,9 @@ function _splashify_get_config() {
   // settings.
   $force_mobile = $config->get('splashify_when_mobile_test');
 
-  if (!empty($is_mobile_enabled)) {
+  if ($is_mobile_enabled) {
+    
+    include_once (backdrop_get_path('module', 'mobile_detect') . '/library/Mobile_Detect.php');
 
     // Is this a mobile request?
     $detect = new Mobile_Detect();

@@ -31,7 +31,7 @@ function splashify_admin_how_form($form, &$form_state) {
   }
   else {
     $colorbox_warning = t('In order to access the lightbox option, you need to have the <a href="@colorbox" target="_blank">Colorbox</a> module installed.', array(
-      '@colorbox' => 'http://drupal.org/project/colorbox',
+      '@colorbox' => 'https://backdropcms.org/project/colorbox',
     ));
 
     backdrop_set_message($colorbox_warning, 'warning');
@@ -118,7 +118,7 @@ function splashify_admin_how_form($form, &$form_state) {
     '#type' => 'textfield',
     '#title' => t('Splashify Delay'),
     '#default_value' => $config->get('splashify_how_long_delay'),
-    '#description' => t('Enter how long in milliseconds to wait before Splashify does it\'s thing. Leave blank to use the default.'),
+    '#description' => t('Enter how long in milliseconds to wait before Splashify does its thing. Leave blank to use the default.'),
   );
 
   $form['delay']['mode_value']['end'] = array('#markup' => '</div>');

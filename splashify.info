@@ -3,5 +3,5 @@ description = Display a splash page anywhere on the site.
 backdrop = 1.x
 type = module
 configure = admin/config/system/splashify
-
-dependencies[] = libraries (2.x)
+dependencies[] = jstorage
+dependencies[] = mobile_detect

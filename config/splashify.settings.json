@@ -2,7 +2,7 @@
     "_config_name": "splashify.settings",
     "splashify_how_desktop_mode": "redirect",
     "splashify_how_desktop_size": "",
-    "splashify_when_mobile": "novalue",
+    "splashify_when_mobile": "0",
     "splashify_how_mobile_mode": "redirect",
     "splashify_how_long_delay": "",
     "splashify_how_long_before_autoclose": "",
@@ -23,5 +23,6 @@
     "splashify_where_desktop_opposite": "FALSE",
     "splashify_where_mobile_page": "home",
     "splashify_where_mobile_listpages": "",
-    "splashify_where_mobile_opposite": "FALSE"
+    "splashify_where_mobile_opposite": "FALSE",
+    "disable_referrer_check": 0
 }

@@ -90,7 +90,7 @@ function splashify_admin_what_form($form, &$form_state) {
       '#type' => 'textarea',
       '#title' => t('Paths or Url Values'),
       '#default_value' => $splashify_what_desktop_content,
-      '#description' => t('Enter the site paths or URLs (one on each line) to use. You can use either the backdrop source path, or the alias. <br />To open a non-Backdrop path, use an absolute URL, i.e. http://example.com/splash.html<br />To output the full view mode for a node, use this url: _splashify_ajax/[nid] ....[nid] being the id of the node you want to display.'),
+      '#description' => t('Enter the site paths or URLs (one on each line) to use. You can use either the Backdrop source path, or the alias. <br />To open a non-Backdrop path, use an absolute URL, i.e. http://example.com/splash.html<br />To output the full view mode for a node, use this url: _splashify_ajax/[nid] ....[nid] being the id of the node you want to display.'),
     );
   }
 
