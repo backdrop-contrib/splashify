@@ -16,8 +16,8 @@ function splashify_admin_when_form($form, &$form_state) {
   $roles = user_roles(TRUE);
   $form_roles = array();
 
-  foreach ($roles as $v) {
-    $form_roles[$v] = $v;
+  foreach ($roles as $k => $v) {
+    $form_roles[$k] = $v;
   }
 
   $form = array();

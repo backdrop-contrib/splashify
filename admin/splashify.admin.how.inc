@@ -27,7 +27,7 @@ function splashify_admin_how_form($form, &$form_state) {
   );
 
   if (module_exists('colorbox')) {
-    $splashify_how_mode_options['lightbox'] = t('Open in a Lightbox (colorbox)');
+    $splashify_how_mode_options['lightbox'] = t('Open in a Lightbox (Colorbox)');
   }
   else {
     $colorbox_warning = t('In order to access the lightbox option, you need to have the <a href="@colorbox" target="_blank">Colorbox</a> module installed.', array(

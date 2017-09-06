@@ -65,7 +65,7 @@ function splashify_admin_what_form($form, &$form_state) {
       '#type' => 'text_format',
       '#title' => t('Content'),
       '#default_value' => (is_array($splashify_what_desktop_content)) ? $splashify_what_desktop_content['value'] : '',
-      '#format' => (is_array($splashify_what_desktop_content)) ? $splashify_what_desktop_content['format'] : '',
+      '#format' => (is_array($splashify_what_desktop_content)) ? $splashify_what_desktop_content['format'] : filter_default_format(),
       '#description' => t('Enter the HTML you want to use on the page.'),
     );
 

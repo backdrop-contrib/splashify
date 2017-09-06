@@ -91,7 +91,7 @@ function splashify_init() {
       break;
 
     case 'home':
-      $home_page = config_get('system.performance', 'site_frontpage');
+      $home_page = config_get('system.core', 'site_frontpage');
       if ($where_opposite) {
         if ($_GET['q'] != $home_page) {
           // Display on every page except the home page.
@@ -220,7 +220,6 @@ function splashify_init() {
   $js_mode_settings['how_delay_enable'] = ($how_delay > 0) ? 1 : 0;
   $js_mode_settings['how_autoclose'] = $how_autoclose + $how_delay;
   $js_mode_settings['how_autoclose_enable'] = ($how_autoclose > 0) ? 1 : 0;
-debug($js_mode_settings);
   $js_mode = '';
   switch ($how_mode) {
     case 'redirect':
@@ -236,7 +235,7 @@ debug($js_mode_settings);
 
     case 'lightbox':
       if (module_exists('colorbox')) {
-        // Display a ColorBox.
+        // Display a Colorbox.
         $js_mode = 'colorbox';
 
         // Get the size of the lightbox.
@@ -282,7 +281,7 @@ debug($js_mode_settings);
     'js_mode_settings' => $js_mode_settings,
     'js_disable_referrer_check' => config_get('splashify.settings', 'disable_referrer_check'),
   );
-debug($js_settings);
+
   backdrop_add_js(array('splashify' => $js_settings), array(
     'type' => 'setting',
     'cache' => TRUE,
@@ -291,7 +290,7 @@ debug($js_settings);
   ));
   // Include the main JS file that does the heavy lifting.
   $js_splashify_int = backdrop_get_path('module', 'splashify') . '/js/splashify_init.js';
-debug($js_splashify_int);
+
   backdrop_add_js($js_splashify_int, array(
     'type' => 'file',
     'scope' => 'header',
@@ -457,7 +456,7 @@ function _splashify_get_config() {
 }
 
 /**
- * Outputs a node via AJAX. This will display the full page view mode for a noe.
+ * Outputs a node via AJAX. This will display the full page view mode for a node.
  */
 function splashify_display_ajax() {
   $nid = arg(1);
