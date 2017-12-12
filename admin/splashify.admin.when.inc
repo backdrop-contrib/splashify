@@ -35,7 +35,6 @@ function splashify_admin_when_form($form, &$form_state) {
 
   // Add control to disable referrer check
   // @see splashify_init.js
-  // TODO This variable was probably removed in Backdrop without replacement.
   $form['disable_referrer_check'] = array(
     '#type' => 'checkbox',
     '#title' => t('Disable referrer check'),

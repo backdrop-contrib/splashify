@@ -67,6 +67,7 @@ function splashify_admin_what_form($form, &$form_state) {
       '#default_value' => (is_array($splashify_what_desktop_content)) ? $splashify_what_desktop_content['value'] : '',
       '#format' => (is_array($splashify_what_desktop_content)) ? $splashify_what_desktop_content['format'] : filter_default_format(),
       '#description' => t('Enter the HTML you want to use on the page.'),
+      '#editor_uploads' => TRUE,
     );
 
     // If the template mode is selected, allow them to set a page title value.
@@ -173,6 +174,7 @@ function splashify_admin_what_form($form, &$form_state) {
         '#title' => t('Paths or Url Values'),
         '#default_value' => $splashify_what_mobile_content,
         '#description' => t('Enter the site paths or URLs (one on each line) to use. You can use either the backdrop source path, or the alias. <br />To open a non-Backdrop path, use an absolute URL, i.e. http://example.com/splash.html'),
+        '#editor_uploads' => TRUE,
       );
     }
 

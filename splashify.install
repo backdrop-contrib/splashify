@@ -18,12 +18,10 @@ function splashify_requirements($phase) {
   if ($phase == 'runtime') {
     // jStorage
     if (module_exists('jstorage')) {
-      // Check jStorage file integrity.
-      $path = backdrop_get_path('module', 'jstorage') . '/library/';
+      // Check jStorage library availability.
+      $jstorage_loaded = backdrop_add_library('jstorage', 'jstorage');
 
-      $file_integrity = file_exists($path . 'jstorage.min.js');
-
-      if (!$file_integrity) {
+      if (!$jstorage_loaded) {
         $requirements['splashify_jstorage_integrity'] = array(
           'title' => $t('Splashify library file integrity'),
           'description' => $t('Cannot find the file "jstorage.min.js".'),

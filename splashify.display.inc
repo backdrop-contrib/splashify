@@ -18,7 +18,7 @@ function splashify_init() {
   global $base_url;
 
   // Load the jStorage library.
-  backdrop_add_js(  backdrop_get_path('module', 'jstorage') . '/library/jstorage.min.js', 'file' );
+  backdrop_add_library('jstorage', 'jstorage');
 
   // If this is the cron script or drush, do not run the splashify code.
   $drush_check = (function_exists('drush_verify_cli') && call_user_func('drush_verify_cli')) ? TRUE : FALSE;
