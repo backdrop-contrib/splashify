@@ -326,7 +326,8 @@ function splashify_display_splashtext() {
   }
   elseif ($what_mode == 'fullscreen') {
     // Display what they entered in the field as a full page.
-    echo $what_content_value;
+    $css = backdrop_get_css();
+    echo $css . $what_content_value;
     backdrop_exit();
   }
 }
