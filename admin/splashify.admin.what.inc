@@ -218,6 +218,29 @@ function splashify_admin_what_form_submit($form, &$form_state) {
   if ($form_state['values']['splashify_what_desktop_mode'] != 'template') {
     config_set('splashify.settings', 'splashify_what_desktop_pagetitle', '');
   }
+  // Save each file as permanent, preventing it from being deleted. 
+  // File usages are not currently removed for CKEditor files.
+  // See https://github.com/backdrop/backdrop-issues/issues/2137.
+  if (isset($form_state['values']['splashify_what_desktop_content']['value'])) {
+    $fids = filter_parse_file_fids($form_state['values']['splashify_what_desktop_content']['value']);
+    $files = file_load_multiple($fids);
+    foreach ($files as $fid => $file) {
+      if ($file && $file->status !== FILE_STATUS_PERMANENT) {
+        // This makes the file "self-referencing", so it will never be deleted.
+        file_usage_add($file, 'file', 'file', $file->fid);
+      }
+    }
+  }
+  if (isset($form_state['values']['splashify_what_mobile_content']['value'])) {
+    $fids = filter_parse_file_fids($form_state['values']['splashify_what_mobile_content']['value']);
+    $files = file_load_multiple($fids);
+    foreach ($files as $fid => $file) {
+      if ($file && $file->status !== FILE_STATUS_PERMANENT) {
+        // This makes the file "self-referencing", so it will never be deleted.
+        file_usage_add($file, 'file', 'file', $file->fid);
+      }
+    }
+  }
 }
 
 /**
