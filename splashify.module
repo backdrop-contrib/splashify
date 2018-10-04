@@ -8,6 +8,17 @@
 require_once 'splashify.display.inc';
 
 /**
+ * Implements hook_config_info().
+ */
+function splashify_config_info() {
+  $prefixes['splashify.settings'] = array(
+    'label' => t('Splashify settings'),
+    'group' => t('Configuration'),
+  );
+  return $prefixes;
+}
+
+/**
  * Implements hook_menu().
  */
 function splashify_menu() {
