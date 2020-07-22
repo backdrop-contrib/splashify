@@ -451,8 +451,8 @@ function _splashify_get_config() {
     'what_content_title' => $what_content_title,
     'how_mode' => $how_mode,
     'how_size' => $how_size,
-    'how_delay' => $how_delay,
-    'how_autoclose' => $how_autoclose,
+    'how_delay' => ($how_delay > 0) ? 1 : 0,
+    'how_autoclose' => ($how_autoclose > 0) ? 1 : 0,
   );
 }
 
