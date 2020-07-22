@@ -465,7 +465,7 @@ function splashify_display_ajax() {
     echo 'An error occurred loading this node.';
     backdrop_exit();
   }
-
-  echo backdrop_render(node_view($node, 'full'));
+  $node = node_view($node, 'full');
+  echo backdrop_render($node);
   backdrop_exit();
 }
