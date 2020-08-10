@@ -130,7 +130,6 @@ function splashify_admin_where_form($form, &$form_state) {
     );
   }
 
-
   $form['#validate'][] = 'splashify_admin_where_form_validate';
   $form['#submit'][] = 'splashify_admin_where_form_submit';
   return system_settings_form($form);
@@ -196,7 +195,7 @@ function splashify_ajax_where_mobile_page_callback($form, &$form_state) {
  * character.
  */
 function splashify_where_paths_check($field, $paths) {
-  return true;
+  return TRUE;
 
   $what_paths = preg_split('/[\n\r]+/', $paths);
   $errors = array();

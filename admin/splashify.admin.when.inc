@@ -90,7 +90,7 @@ function splashify_admin_when_form($form, &$form_state) {
   );
 
   if (module_exists('mobile_detect')) {
-    include_once (backdrop_get_path('module', 'mobile_detect') . '/library/Mobile_Detect.php');
+    include_once backdrop_get_path('module', 'mobile_detect') . '/library/Mobile_Detect.php';
     $form['mobile']['splashify_when_mobile'] = array(
       '#type' => 'checkbox',
       '#title' => t('Enable Unique Mobile Splash'),
