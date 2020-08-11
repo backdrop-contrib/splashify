@@ -103,7 +103,7 @@ function splashify_permission() {
   return array(
     'access splashify admin' => array(
       'title' => t('Administer Splashify'),
-      'description' => t('Access the admin area for the splashify module.'),
+      'description' => t('Access the admin area for the Splashify module.'),
     ),
   );
 }

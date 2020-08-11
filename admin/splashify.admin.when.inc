@@ -27,12 +27,6 @@ function splashify_admin_when_form($form, &$form_state) {
     '#markup' => '<p>' . t('When should the splash page show up? This is also where the main mobile option is defined.') . '</p>',
   );
 
-  $form['splashify_when_anonymous'] = array(
-    '#type' => 'checkbox',
-    '#title' => t('Only show to Anonymous users'),
-    '#default_value' => $config->get('splashify_when_anonymous'),
-  );
-
   // Add control to disable referrer check
   // @see splashify_init.js
   $form['disable_referrer_check'] = array(
@@ -63,17 +57,23 @@ function splashify_admin_when_form($form, &$form_state) {
   $form['roles'] = array(
     '#type' => 'fieldset',
     '#title' => t('Display for roles'),
-    '#states' => array(
-      'visible' => array(
-        ':input[name="splashify_when_anonymous"]' => array('checked' => FALSE),
-      ),
-    ),
+  );
+
+  $form['roles']['splashify_when_anonymous'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Only show to Anonymous users'),
+    '#default_value' => $config->get('splashify_when_anonymous'),
   );
 
   $form['roles']['splashify_when_roles'] = array(
     '#type' => 'checkbox',
     '#title' => 'Restrict to selected roles',
     '#default_value' => $config->get('splashify_when_roles'),
+    '#states' => array(
+      'visible' => array(
+        ':input[name="splashify_when_anonymous"]' => array('checked' => FALSE),
+      ),
+    ),
   );
 
   $form['roles']['splashify_when_roles_options'] = array(
@@ -82,6 +82,11 @@ function splashify_admin_when_form($form, &$form_state) {
     '#default_value' => $config->get('splashify_when_roles_options'),
     '#options' => $form_roles,
     '#description' => t('Select the roles for which it will apply'),
+    '#states' => array(
+      'visible' => array(
+        ':input[name="splashify_when_anonymous"]' => array('checked' => FALSE),
+      ),
+    ),
   );
 
   $form['mobile'] = array(

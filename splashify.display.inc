@@ -69,7 +69,6 @@ function splashify_init() {
       }
     }
   }
-
   // Check the outcome of above and return if no roles match
   if (!$is_role) {
     return;
