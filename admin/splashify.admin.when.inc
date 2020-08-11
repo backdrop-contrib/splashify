@@ -67,7 +67,7 @@ function splashify_admin_when_form($form, &$form_state) {
 
   $form['roles']['splashify_when_roles'] = array(
     '#type' => 'checkbox',
-    '#title' => 'Restrict to selected roles',
+    '#title' => t('Restrict to specific roles'),
     '#default_value' => $config->get('splashify_when_roles'),
     '#states' => array(
       'visible' => array(
@@ -85,6 +85,7 @@ function splashify_admin_when_form($form, &$form_state) {
     '#states' => array(
       'visible' => array(
         ':input[name="splashify_when_anonymous"]' => array('checked' => FALSE),
+        ':input[name="splashify_when_roles"]' => array('checked' => TRUE),
       ),
     ),
   );
@@ -95,7 +96,6 @@ function splashify_admin_when_form($form, &$form_state) {
   );
 
   if (module_exists('mobile_detect')) {
-    include_once backdrop_get_path('module', 'mobile_detect') . '/library/Mobile_Detect.php';
     $form['mobile']['splashify_when_mobile'] = array(
       '#type' => 'checkbox',
       '#title' => t('Enable Unique Mobile Splash'),
