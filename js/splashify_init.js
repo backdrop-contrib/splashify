@@ -6,15 +6,15 @@ jQuery(document).ready(function($) {
     hidepage();
   }
 
+  var js_mode_settings = Backdrop.settings.splashify.js_mode_settings;
   var now = new Date();
   var nowtimeSeconds = now.getTime() / 1000;
   var referrer = document.referrer + '';
   var hostname = window.location.hostname + '';
   var splash = $.jStorage.get("splash", 0);
   var splashalways = Backdrop.settings.splashify.js_splash_always;
-  var what_urls = Backdrop.settings.splashify.js_mode_settings.urls;
+  var what_urls = js_mode_settings.urls;
   var referrer_check = Backdrop.settings.splashify.js_disable_referrer_check;
-  var js_mode_settings = Backdrop.settings.splashify.js_mode_settings;
 
   // This updates the referer string by taking out the url parameter from the
   // url...which is included from google search results (as an example).
@@ -46,20 +46,20 @@ jQuery(document).ready(function($) {
     $.jStorage.set("splash", nowtimeSeconds + expireAfter);
 
     // Determine the url we are working with, which is based on the mode.
-    if(Backdrop.settings.splashify.js_mode_settings.system_splash != ''){
+    if(js_mode_settings.system_splash != ''){
       // Display the system splash page.
-      url = Backdrop.settings.splashify.js_mode_settings.system_splash;
-    } else if(Backdrop.settings.splashify.js_mode_settings.mode == 'sequence'){
+      url = js_mode_settings.system_splash;
+    } else if(js_mode_settings.mode == 'sequence'){
       // Display the splash pages in sequence.
       var new_url_index = 0;
       var last_url_index = jQuery.inArray(last_url, what_urls);
-      if(last_url_index > -1 && last_url_index + 1 < Backdrop.settings.splashify.js_mode_settings.total_urls){
+      if(last_url_index > -1 && last_url_index + 1 < js_mode_settings.total_urls){
         new_url_index = last_url_index + 1;
       }
       url = what_urls[new_url_index];
-    } else if(Backdrop.settings.splashify.js_mode_settings.mode == 'random'){
+    } else if(js_mode_settings.mode == 'random'){
       // Display a random splash page.
-      var new_url_index = Math.floor(Math.random() * Backdrop.settings.splashify.js_mode_settings.total_urls);
+      var new_url_index = Math.floor(Math.random() * js_mode_settings.total_urls);
       url = what_urls[new_url_index];
     }
 
@@ -79,8 +79,8 @@ jQuery(document).ready(function($) {
           transition:'elastic',
           iframe:true,
           href:url,
-          width:Backdrop.settings.splashify.js_mode_settings.size_width,
-          height:Backdrop.settings.splashify.js_mode_settings.size_height
+          width: js_mode_settings.size_width,
+          height: js_mode_settings.size_height
         };
 
         if (url.substring(0, 16) == "_splashify_ajax/") {
@@ -91,7 +91,7 @@ jQuery(document).ready(function($) {
         $.colorbox(colorbox_options);
       } else if(jsmode == 'window') {
         // Open a popup window.
-        window.open(url, 'splash', Backdrop.settings.splashify.js_mode_settings.size);
+        window.open(url, 'splash',  js_mode_settings.size);
       }
     }
 

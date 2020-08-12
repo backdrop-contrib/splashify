@@ -81,14 +81,39 @@ function splashify_admin_how_form($form, &$form_state) {
 
   $form['desktop']['mode_value']['end'] = array('#markup' => '</div>');
 
-  $form['mobile'] = array(
+  $form['timing'] = array(
     '#type' => 'fieldset',
-    '#title' => t('Mobile Settings'),
+    '#title' => t('Timing'),
   );
+
+  $form['timing']['mode_value']['splashify_how_long_delay'] = array(
+    '#type' => 'number',
+    '#size' => 5,
+    '#min' => 0,
+    '#maxlength' => 5,
+    '#title' => t('Delay opening (ms)'),
+    '#default_value' => $config->get('splashify_how_long_delay'),
+    '#description' => t('Enter how long in milliseconds to wait before Splashify does its thing. Leave blank to use the default.'),
+  );
+
+  $form['timing']['mode_value']['splashify_how_long_before_autoclose'] = array(
+    '#type' => 'number',
+    '#size' => 5,
+    '#min' => 0,
+    '#maxlength' => 5,
+    '#title' => t('Automatically close (ms)'),
+    '#default_value' => $config->get('splashify_how_long_before_autoclose'),
+    '#description' => t('Enter how long in milliseconds to wait before Splashify autocloses. Leave blank to disable.'),
+  );
+
 
   // If the mobile splash is enabled, display the mobile options.
   if ($config->get('splashify_when_mobile') == 1) {
     // Determines how the splash page shows up.
+    $form['mobile'] = array(
+      '#type' => 'fieldset',
+      '#title' => t('Mobile Settings'),
+    );
     $form['mobile']['splashify_how_mobile_mode'] = array(
       '#type' => 'select',
       '#title' => t('Splash Display Mode'),
@@ -102,42 +127,11 @@ function splashify_admin_how_form($form, &$form_state) {
     );
   }
   else {
-    $form['mobile']['splashify_how_mobile_mode'] = array(
+    $form['splashify_how_mobile_mode'] = array(
       '#markup' => '<p>' . t('In order to specify mobile options, you need to enable the "When: Enable Unique Mobile Splash" option.') . '</p>',
+      '#disabled' => TRUE,
     );
   }
-
-  $form['delay'] = array(
-    '#type' => 'fieldset',
-    '#title' => t('Splashify Delay'),
-  );
-
-  $form['delay']['mode_value']['begin'] = array('#markup' => '<div id="how-mode-splashify-delay">');
-
-  $form['delay']['mode_value']['splashify_how_long_delay'] = array(
-    '#type' => 'textfield',
-    '#title' => t('Splashify Delay'),
-    '#default_value' => $config->get('splashify_how_long_delay'),
-    '#description' => t('Enter how long in milliseconds to wait before Splashify does its thing. Leave blank to use the default.'),
-  );
-
-  $form['delay']['mode_value']['end'] = array('#markup' => '</div>');
-
-  $form['autoclose'] = array(
-    '#type' => 'fieldset',
-    '#title' => t('Splashify Autoclose'),
-  );
-
-  $form['autoclose']['mode_value']['begin'] = array('#markup' => '<div id="how-mode-splashify-autoclose">');
-
-  $form['autoclose']['mode_value']['splashify_how_long_before_autoclose'] = array(
-    '#type' => 'textfield',
-    '#title' => t('Splashify Autoclose'),
-    '#default_value' => $config->get('splashify_how_long_before_autoclose'),
-    '#description' => t('Enter how long in milliseconds to wait before Splashify autocloses.  Leave blank to disable.'),
-  );
-
-  $form['autoclose']['mode_value']['end'] = array('#markup' => '</div>');
 
   return system_settings_form($form);
 }

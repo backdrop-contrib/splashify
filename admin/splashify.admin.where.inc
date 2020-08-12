@@ -75,13 +75,12 @@ function splashify_admin_where_form($form, &$form_state) {
     '#default_value' => $config->get('splashify_where_desktop_opposite'),
   );
 
-  $form['mobile'] = array(
-    '#type' => 'fieldset',
-    '#title' => t('Mobile Settings'),
-  );
-
   // If the mobile splash is enabled, display the mobile options.
   if ($config->get('splashify_when_mobile') == 1) {
+    $form['mobile'] = array(
+      '#type' => 'fieldset',
+      '#title' => t('Mobile Settings'),
+    );
     $form['mobile']['splashify_where_mobile_page'] = array(
       '#type' => 'select',
       '#title' => t('Specify where the splash page should show up:'),
@@ -125,7 +124,7 @@ function splashify_admin_where_form($form, &$form_state) {
 
   }
   else {
-    $form['mobile']['splashify_what_mobile_mode'] = array(
+    $form['splashify_what_mobile_mode'] = array(
       '#markup' => '<p>' . t('In order to specify mobile options, you need to enable the "When: Enable Unique Mobile Splash" option.') . '</p>',
     );
   }

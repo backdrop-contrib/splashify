@@ -101,13 +101,13 @@ function splashify_admin_what_form($form, &$form_state) {
    * Mobile settings.
    */
 
-  $form['mobile'] = array(
-    '#type' => 'fieldset',
-    '#title' => t('Mobile Settings'),
-  );
 
   // If the mobile splash is enabled, display the mobile options.
   if ($config->get('splashify_when_mobile') == 1) {
+    $form['mobile'] = array(
+      '#type' => 'fieldset',
+      '#title' => t('Mobile Settings'),
+    );
     $form['mobile']['splashify_what_mobile_mode'] = array(
       '#type' => 'select',
       '#title' => t('Splash Mode'),
@@ -181,7 +181,7 @@ function splashify_admin_what_form($form, &$form_state) {
 
   }
   else {
-    $form['mobile']['splashify_what_mobile_mode'] = array(
+    $form['splashify_what_mobile_mode'] = array(
       '#markup' => '<p>' . t('In order to specify mobile options, you need to enable the "When: Enable Unique Mobile Splash" option.') . '</p>',
     );
   }
