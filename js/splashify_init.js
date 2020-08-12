@@ -32,7 +32,7 @@ jQuery(document).ready(function($) {
 
   // Determine if we should display the splash page.
   var displaysplash = false;
-  if (!splash || splash < nowtimeSeconds || splashalways=='1') {
+  if (!splash || splash < nowtimeSeconds || splashalways == '1') {
     displaysplash = true;
   }
 
@@ -53,7 +53,7 @@ jQuery(document).ready(function($) {
       // Display the splash pages in sequence.
       var new_url_index = 0;
       var last_url_index = jQuery.inArray(last_url, what_urls);
-      if(last_url_index > -1 && last_url_index+1 < Backdrop.settings.splashify.js_mode_settings.total_urls){
+      if(last_url_index > -1 && last_url_index + 1 < Backdrop.settings.splashify.js_mode_settings.total_urls){
         new_url_index = last_url_index + 1;
       }
       url = what_urls[new_url_index];

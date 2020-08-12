@@ -280,7 +280,7 @@ function splashify_init() {
     'js_disable_referrer_check' => config_get('splashify.settings', 'disable_referrer_check'),
   );
 
-  backdrop_add_js(array('splashify' => $js_settings), array(
+backdrop_add_js(array('splashify' => $js_settings), array(
     'type' => 'setting',
     'cache' => TRUE,
     'weight' => -100,
@@ -289,7 +289,7 @@ function splashify_init() {
   // Include the main JS file that does the heavy lifting.
   $js_splashify_int = backdrop_get_path('module', 'splashify') . '/js/splashify_init.js';
 
-  backdrop_add_js($js_splashify_int, array(
+backdrop_add_js($js_splashify_int, array(
     'type' => 'file',
     'scope' => 'header',
     'group' => JS_THEME,

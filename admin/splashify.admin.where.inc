@@ -195,8 +195,6 @@ function splashify_ajax_where_mobile_page_callback($form, &$form_state) {
  * character.
  */
 function splashify_where_paths_check($field, $paths) {
-  return TRUE;
-
   $what_paths = preg_split('/[\n\r]+/', $paths);
   $errors = array();
   foreach ($what_paths as $path) {
