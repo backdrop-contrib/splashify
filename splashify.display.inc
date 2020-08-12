@@ -378,9 +378,6 @@ function _splashify_get_config() {
   $force_mobile = $config->get('splashify_when_mobile_test');
 
   if ($is_mobile_enabled) {
-
-    include_once backdrop_get_path('module', 'mobile_detect') . '/library/Mobile_Detect.php';
-
     // Is this a mobile request?
     $detect = new Mobile_Detect();
     if ($detect->isMobile() || $force_mobile) {
