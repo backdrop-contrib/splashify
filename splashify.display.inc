@@ -369,6 +369,10 @@ function _splashify_get_config() {
     }
   }
 
+  $how_size = '';
+  $how_delay = '';
+  $how_autoclose = '';
+
   // This controls whether or not we should use the mobile settings for this
   // request.
   $do_mobile = FALSE;
